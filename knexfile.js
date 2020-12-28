@@ -10,11 +10,9 @@ module.exports = {
       password: 'root',
       typeCast: function castField(field, next) {
         
-        if (field.type === 'BIT' && field.length === 1) {
+        if (field.type === 'TINY' && field.length === 1) {
 
-          const bytes = field.buffer();
-
-          return bytes[0] === 1;
+          return field.string() === '1'
         }
 
         return next();

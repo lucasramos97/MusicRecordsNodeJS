@@ -1,4 +1,5 @@
 const knex = require("../database")
+const StringUtils = require("../utils/StringUtils")
 const MusicValidator = require("../validators/MusicValidator")
 
 module.exports = {
@@ -22,14 +23,17 @@ module.exports = {
 
             let { title, artist, launchDate, duration, viewsNumber, feat } = req.body
 
-            let validSave = MusicValidator.validSave({ title, artist, launchDate, duration, viewsNumber, feat })
+            let launchDateOnlyNumbers = StringUtils.leaveOnlyNumbers(launchDate)
+
+            let validSave = MusicValidator.validSave({ title, artist, launchDate: launchDateOnlyNumbers, duration, viewsNumber })
 
             if (validSave) {
                 return res.json({ message: validSave })
             }
 
-            // await knex('music').insert({ title, artist, launchDate, duration, viewsNumber, feat })
-            console.log(title, artist, launchDate, duration, viewsNumber, feat)
+            let featTiny = getFeatTiny(feat)
+
+            await knex('music').insert({ title, artist, launch_date: launchDateOnlyNumbers, duration, views_number: viewsNumber, feat: featTiny, user_id: 1 })
 
             return res.status(201).send()
 
@@ -42,10 +46,23 @@ module.exports = {
 
         try {
 
-            let { id, title, artist, launchDate, duration, viewsNumber, feat } = req.body
+            let { id } = req.params
 
-            // await knex('music').update({ title, artist, launchDate, duration, viewsNumber, feat }).where({ id })
-            console.log(id, title, artist, launchDate, duration, viewsNumber, feat)
+            let { title, artist, launchDate, duration, viewsNumber, feat } = req.body
+
+            let launchDateOnlyNumbers = StringUtils.leaveOnlyNumbers(launchDate)
+
+            let validSave = MusicValidator.validSave({ title, artist, launchDate: launchDateOnlyNumbers, duration, viewsNumber })
+
+            if (validSave) {
+                return res.json({ message: validSave })
+            }
+
+            let featTiny = getFeatTiny(feat)
+
+            await knex('music')
+            .update({ title, artist, launch_date: launchDateOnlyNumbers, duration, views_number: viewsNumber, feat: featTiny })
+            .where({ id })
 
             return res.send()
 
@@ -58,24 +75,23 @@ module.exports = {
 
         try {
 
-            let { musicId } = req.params
+            let { id } = req.params
 
-            let selectMusic = await knex('music').select('*').where({ musicId })
+            let selectMusic = await knex('music').select().where({ id })
 
             if (selectMusic.length !== 1) {
-                return res.status(400).json({ message: `Music not found by id ${musicId}!` })
+                return res.status(400).json({ message: `Music not found by id ${id}!` })
             }
 
             let music = selectMusic[0]
 
             if (music.deleted) {
-                return res.status(400).json({ message: `Music not found by id ${musicId}!` })
+                return res.status(400).json({ message: `Music not found by id ${id}!` })
             }
 
             music.deleted = true
 
-            // await knex('music').update(music).where({ id: music.id })
-            console.log(music)
+            await knex('music').update(music).where({ id: music.id })
 
             return res.send()
 
@@ -116,15 +132,11 @@ module.exports = {
 
             let musics = req.body
 
-            musics.forEach(music => {
-                music.deleted = false
-            })
-
             await knex.transaction(trx => {
                 const queries = [];
                 musics.forEach(music => {
                     const query = knex('music')
-                        .update(music)
+                        .update({ deleted: false })
                         .where({ id: music.id })
                         .transacting(trx)
                     queries.push(query)
@@ -150,7 +162,7 @@ async function getPaginatedMusics(req, deleted) {
     let { page = 0, size = 5 } = req.query
 
     let musics = await knex('music')
-        .select('id', 'title', 'artist', 'launch_date', 'duration', 'views_number', 'feat')
+        .select('id', 'title', 'artist', 'launch_date as launchDate', 'duration', 'views_number as viewsNumber', 'feat')
         .where({ user_id: userId })
         .where({ deleted })
         .limit(size)
@@ -171,4 +183,11 @@ async function getCountMusics(deleted) {
         .where({ deleted })
 
     return count['count(*)']
+}
+
+function getFeatTiny(feat) {
+    if (feat === true) {
+        return 1
+    }
+    return 0
 }

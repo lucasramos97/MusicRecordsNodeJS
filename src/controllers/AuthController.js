@@ -41,8 +41,7 @@ module.exports = {
                 return res.json({ message: validCreate })
             }
 
-            // await knex('user').insert({ name, email, password })
-            console.log(name, email, password)
+            await knex('user').insert({ name, email, password })
 
             return res.status(201).send()
 
