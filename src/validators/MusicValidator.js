@@ -1,7 +1,7 @@
 
 module.exports = {
 
-    validSave(music) {
+    validPersist(music) {
 
         let resultValidTitle = validTitle(music.title)
 

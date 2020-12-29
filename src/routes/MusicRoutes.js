@@ -1,12 +1,9 @@
 
 const express = require('express')
-const UserController = require('./controllers/AuthController')
-const MusicController = require('./controllers/MusicController')
+const MusicController = require('../controllers/MusicController')
 
 const routes = express.Router()
 
-routes.post('/auth/login', UserController.login)
-routes.post('/auth/create', UserController.create)
 routes.get('/musics', MusicController.getAllMusics)
 routes.post('/musics', MusicController.save)
 routes.put('/musics/:id', MusicController.edit)

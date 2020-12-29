@@ -3,42 +3,22 @@ module.exports = {
 
     validLogin(user) {
 
-        let resultValidEmail = validEmail(user.email)
+        validEmail(user.email)
 
-        if (resultValidEmail) {
-            return resultValidEmail
-        }
+        validEmailFormat(user.email)
 
-        let resultValidEmailFormat = validEmailFormat(user.email)
+        validPassword(user.password)
 
-        if (resultValidEmailFormat) {
-            return resultValidEmailFormat
-        }
-
-        let resultValidPassword = validPassword(user.password)
-
-        if (resultValidPassword) {
-            return resultValidPassword
-        }
-
-        return ''
+        return true
     },
 
     validCreate(user) {
 
-        let resultValidName = validName(user.name)
+        validName(user.name)
 
-        if (resultValidName) {
-            return resultValidName
-        }
+        this.validLogin(user)
 
-        let validLogin = this.validLogin(user)
-
-        if (validLogin) {
-            return validLogin
-        }
-
-        return ''
+        return true
     }
 
 }
@@ -46,19 +26,19 @@ module.exports = {
 function validName(name) {
 
     if (!name) {
-        return 'Name is required!'
+        throw new Error('Name is required!')
     }
 
-    return ''
+    return true
 }
 
 function validEmail(email) {
 
     if (!email) {
-        return 'E-Mail is required!'
+        throw new Error('E-Mail is required!')
     }
-    
-    return ''
+
+    return true
 }
 
 function validEmailFormat(email) {
@@ -66,17 +46,17 @@ function validEmailFormat(email) {
     let emailRegex = new RegExp('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')
 
     if (!emailRegex.test(email)) {
-        return 'Valid E-Mail format is required!'
+        throw new Error('Valid E-Mail format is required!')
     }
     
-    return ''
+    return true
 }
 
 function validPassword(password) {
 
     if (!password) {
-        return 'Password is required!'
+        throw new Error('Password is required!')
     }
     
-    return ''
+    return true
 }
