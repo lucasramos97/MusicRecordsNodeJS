@@ -28,7 +28,7 @@ module.exports = {
 
         await knex('music')
             .update(musicPersist)
-            .where({ user_id: music.id })
+            .where({ id: music.id })
     },
 
     async changeDeletedToTrue(id) {

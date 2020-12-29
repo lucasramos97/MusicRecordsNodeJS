@@ -2,8 +2,10 @@ const knex = require("../database")
 
 module.exports = {
 
-    async getUserByEmail(email) {
-        return await knex('user').select('email', 'name').where({ email })
+    async getUserIfExistsByEmail(email) {
+        return await knex('user')
+            .select('id', 'name', 'email', 'password')
+            .where({ email })
     },
 
     async save(user) {

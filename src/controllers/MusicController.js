@@ -5,7 +5,7 @@ module.exports = {
 
     async getAllMusics(req, res) {
 
-        let userId = 1
+        let userId = req.userId
 
         let page = req.query.page
 
@@ -18,7 +18,7 @@ module.exports = {
 
         try {
 
-            let userId = 1
+            let userId = req.userId
 
             let { title, artist, launchDate, duration, viewsNumber, feat } = req.body
 
@@ -65,7 +65,7 @@ module.exports = {
 
     async getAllDeletedMusics(req, res) {
 
-        let userId = 1
+        let userId = req.userId
 
         let page = req.query.page
 
@@ -76,9 +76,11 @@ module.exports = {
 
     async getCountDeletedMusics(req, res) {
 
-        let userId = 1
+        let userId = req.userId
 
-        return await MusicService.getCountDeletedMusics(userId)
+        let countDeletedMusics = await MusicService.getCountDeletedMusics(userId)
+
+        return res.json({ message: countDeletedMusics })
     },
 
     async recoverDeletedMusics(req, res) {

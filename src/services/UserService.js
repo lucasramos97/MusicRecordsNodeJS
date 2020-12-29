@@ -4,13 +4,13 @@ module.exports = {
 
     async getUserIfExistsByEmail(email) {
 
-        let user = await UserRepository.getUserByEmail(email)
+        let users = await UserRepository.getUserIfExistsByEmail(email)
 
-        if (user.length !== 1) {
-            throw new Error(`User not found by E-Mail: ${email}`)
+        if (users.length === 0) {
+            throw new Error('Invalid E-Mail or Password!')
         }
 
-        return user
+        return users[0]
     },
 
     async save(user) {

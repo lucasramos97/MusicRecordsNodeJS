@@ -1,5 +1,7 @@
 
 const MusicRepository = require("../repositories/MusicRepository")
+const StringUtils = require('../utils/StringUtils')
+const MusicValidator = require('../validators/MusicValidator')
 
 module.exports = {
 
