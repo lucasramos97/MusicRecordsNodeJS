@@ -1,0 +1,428 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Music Records API",
+    "description": "API documentation Music Records.\n\nLucas Ramos - lucasramosdev@gmail.com - <a href='https://github.com/lucasramos97' target='_blank'>GitHub</a> - <a href='https://www.linkedin.com/in/lucasramos97' target='_blank'>Linkedin</a>"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "tags": [],
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "AuthorizationToken": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/MessageResponse"
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/MessageResponse"
+            }
+          }
+        }
+      }
+    },
+    "/auth/create": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/MessageResponse"
+            }
+          }
+        }
+      }
+    },
+    "/musics": {
+      "get": {
+        "tags": [
+          "Music"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/PaginatedMusics"
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Music"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "music",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Music"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/MessageResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/musics/{id}": {
+      "put": {
+        "tags": [
+          "Music"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "music",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Music"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/MessageResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Music"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/MessageResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/musics/deleted": {
+      "get": {
+        "tags": [
+          "Music"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/PaginatedMusics"
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/musics/deleted/count": {
+      "get": {
+        "tags": [
+          "Music"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/MessageResponse"
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/musics/recover": {
+      "post": {
+        "tags": [
+          "Music"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/MessageResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Login": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "email@email.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "xml": {
+        "name": "Login"
+      }
+    },
+    "MessageResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "message"
+        },
+        "username": {
+          "type": "string",
+          "example": "username"
+        }
+      },
+      "xml": {
+        "name": "MessageResponse"
+      }
+    },
+    "Music": {
+      "type": "object",
+      "properties": {
+        "artist": {
+          "type": "string",
+          "example": "artist"
+        },
+        "duration": {
+          "type": "string",
+          "example": "01:00"
+        },
+        "feat": {
+          "type": "boolean",
+          "example": false
+        },
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "launchDate": {
+          "type": "string",
+          "example": "01/01/2021"
+        },
+        "title": {
+          "type": "string",
+          "example": "title"
+        },
+        "viewsNumber": {
+          "type": "number",
+          "example": 0
+        }
+      },
+      "required": [
+        "artist",
+        "duration",
+        "launchDate",
+        "title"
+      ],
+      "xml": {
+        "name": "Music"
+      }
+    },
+    "PaginatedMusics": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "artist": {
+                "type": "string",
+                "example": "artist"
+              },
+              "duration": {
+                "type": "string",
+                "example": "01:00"
+              },
+              "feat": {
+                "type": "boolean",
+                "example": false
+              },
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "launchDate": {
+                "type": "string",
+                "example": "01/01/2021"
+              },
+              "title": {
+                "type": "string",
+                "example": "title"
+              },
+              "viewsNumber": {
+                "type": "number",
+                "example": 0
+              }
+            },
+            "required": [
+              "artist",
+              "duration",
+              "launchDate",
+              "title"
+            ]
+          }
+        },
+        "totalElements": {
+          "type": "number",
+          "example": 0
+        }
+      },
+      "xml": {
+        "name": "PaginatedMusics"
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "name"
+        },
+        "email": {
+          "type": "string",
+          "example": "email@email.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
+        }
+      },
+      "required": [
+        "name",
+        "email",
+        "password"
+      ],
+      "xml": {
+        "name": "User"
+      }
+    }
+  },
+  "security": [
+    {
+      "AuthorizationToken": []
+    }
+  ]
+}
