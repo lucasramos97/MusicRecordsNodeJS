@@ -1,76 +1,71 @@
-
-const MusicRepository = require("../repositories/MusicRepository")
-const StringUtils = require('../utils/StringUtils')
-const MusicValidator = require('../validators/MusicValidator')
+const MusicRepository = require("../repositories/MusicRepository");
+const StringUtils = require("../utils/StringUtils");
+const MusicValidator = require("../validators/MusicValidator");
 
 module.exports = {
+  async findAllMusics(userId, page) {
+    let musics = await MusicRepository.selectAllByUserIdAndDeletedIsFalse(
+      userId,
+      page
+    );
 
-    async findAllMusics(userId, page) {
+    let countMusics = await MusicRepository.getCountMusicsDeletedIsFalse(
+      userId
+    );
 
-        let musics = await MusicRepository.selectAllByUserIdAndDeletedIsFalse(userId, page)
+    return { content: musics, totalElements: countMusics };
+  },
 
-        let countMusics = await MusicRepository.getCountMusicsDeletedIsFalse(userId)
+  async save(music) {
+    beforePersist(music);
 
-        return { content: musics, totalElements: countMusics }
-    },
+    await MusicRepository.insert(music);
+  },
 
-    async save(music) {
+  async edit(music) {
+    beforePersist(music);
 
-        beforePersist(music)
+    await MusicRepository.update(music);
+  },
 
-        await MusicRepository.insert(music)
+  async delete(id) {
+    let selectMusic = await MusicRepository.getById(id);
 
-    },
+    if (selectMusic.length !== 1) {
+      throw new Error(`Music not found by id ${id}!`);
+    }
 
-    async edit(music) {
+    let music = selectMusic[0];
 
-        beforePersist(music)
+    if (music.deleted) {
+      throw new Error(`Music not found by id ${id}!`);
+    }
 
-        await MusicRepository.update(music)
+    await MusicRepository.changeDeletedToTrue(music.id);
+  },
 
-    },
+  async getAllDeletedMusics(userId, page) {
+    let musics = await MusicRepository.selectAllByUserIdAndDeletedIsTrue(
+      userId,
+      page
+    );
 
-    async delete(id) {
+    let countMusics = await MusicRepository.getCountMusicsDeletedIsTrue(userId);
 
-        let selectMusic = await MusicRepository.getById(id)
+    return { content: musics, totalElements: countMusics };
+  },
 
-        if (selectMusic.length !== 1) {
-            throw new Error(`Music not found by id ${id}!`)
-        }
+  async getCountDeletedMusics(userId) {
+    return await MusicRepository.getCountMusicsDeletedIsTrue(userId);
+  },
 
-        let music = selectMusic[0]
-
-        if (music.deleted) {
-            throw new Error(`Music not found by id ${id}!`)
-        }
-
-        await MusicRepository.changeDeletedToTrue(music.id)
-
-    },
-
-    async getAllDeletedMusics(userId, page) {
-
-        let musics = await MusicRepository.selectAllByUserIdAndDeletedIsTrue(userId, page)
-
-        let countMusics = await MusicRepository.getCountMusicsDeletedIsTrue(userId)
-
-        return { content: musics, totalElements: countMusics }
-    },
-
-    async getCountDeletedMusics(userId) {
-        return await MusicRepository.getCountMusicsDeletedIsTrue(userId)
-    },
-
-    async recoverDeletedMusics(musics) {
-        await MusicRepository.changeMusicsToDeletedFalse(musics)
-    },
-
-}
+  async recoverDeletedMusics(musics) {
+    await MusicRepository.changeMusicsToDeletedFalse(musics);
+  },
+};
 
 function beforePersist(music) {
+  music.launchDate = StringUtils.leaveOnlyNumbers(music.launchDate);
 
-    music.launchDate = StringUtils.leaveOnlyNumbers(music.launchDate)
-
-    MusicValidator.validPersist(music)
-
+  MusicValidator.validPersist(music);
 }

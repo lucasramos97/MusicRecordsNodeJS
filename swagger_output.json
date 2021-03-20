@@ -8,9 +8,7 @@
   "host": "localhost:8080",
   "basePath": "/",
   "tags": [],
-  "schemes": [
-    "http"
-  ],
+  "schemes": ["http"],
   "securityDefinitions": {
     "AuthorizationToken": {
       "type": "apiKey",
@@ -18,18 +16,12 @@
       "in": "header"
     }
   },
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "paths": {
     "/auth/login": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "description": "",
         "parameters": [
           {
@@ -58,9 +50,7 @@
     },
     "/auth/create": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "description": "",
         "parameters": [
           {
@@ -86,9 +76,7 @@
     },
     "/musics": {
       "get": {
-        "tags": [
-          "Music"
-        ],
+        "tags": ["Music"],
         "description": "",
         "parameters": [
           {
@@ -109,9 +97,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Music"
-        ],
+        "tags": ["Music"],
         "description": "",
         "parameters": [
           {
@@ -140,9 +126,7 @@
     },
     "/musics/{id}": {
       "put": {
-        "tags": [
-          "Music"
-        ],
+        "tags": ["Music"],
         "description": "",
         "parameters": [
           {
@@ -171,9 +155,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Music"
-        ],
+        "tags": ["Music"],
         "description": "",
         "parameters": [
           {
@@ -197,9 +179,7 @@
     },
     "/musics/deleted": {
       "get": {
-        "tags": [
-          "Music"
-        ],
+        "tags": ["Music"],
         "description": "",
         "parameters": [
           {
@@ -222,9 +202,7 @@
     },
     "/musics/deleted/count": {
       "get": {
-        "tags": [
-          "Music"
-        ],
+        "tags": ["Music"],
         "description": "",
         "parameters": [],
         "responses": {
@@ -242,9 +220,7 @@
     },
     "/musics/recover": {
       "post": {
-        "tags": [
-          "Music"
-        ],
+        "tags": ["Music"],
         "description": "",
         "parameters": [],
         "responses": {
@@ -274,10 +250,7 @@
           "example": "password"
         }
       },
-      "required": [
-        "email",
-        "password"
-      ],
+      "required": ["email", "password"],
       "xml": {
         "name": "Login"
       }
@@ -330,12 +303,7 @@
           "example": 0
         }
       },
-      "required": [
-        "artist",
-        "duration",
-        "launchDate",
-        "title"
-      ],
+      "required": ["artist", "duration", "launchDate", "title"],
       "xml": {
         "name": "Music"
       }
@@ -377,12 +345,7 @@
                 "example": 0
               }
             },
-            "required": [
-              "artist",
-              "duration",
-              "launchDate",
-              "title"
-            ]
+            "required": ["artist", "duration", "launchDate", "title"]
           }
         },
         "totalElements": {
@@ -410,11 +373,7 @@
           "example": "password"
         }
       },
-      "required": [
-        "name",
-        "email",
-        "password"
-      ],
+      "required": ["name", "email", "password"],
       "xml": {
         "name": "User"
       }

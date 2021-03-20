@@ -1,157 +1,151 @@
-
-const MusicService = require("../services/MusicService")
+const MusicService = require("../services/MusicService");
 
 module.exports = {
+  async getAllMusics(req, res) {
+    // #swagger.tags = ['Music']
 
-    async getAllMusics(req, res) {
+    let userId = req.userId;
 
-        // #swagger.tags = ['Music']
+    let page = req.query.page;
 
-        let userId = req.userId
+    let paginatedMusics = await MusicService.findAllMusics(userId, page);
 
-        let page = req.query.page
+    /* #swagger.responses[200] = { 
+      schema: { $ref: "#/definitions/PaginatedMusics" },
+    } */
 
-        let paginatedMusics = await MusicService.findAllMusics(userId, page)
+    return res.json(paginatedMusics);
+  },
 
-        /* #swagger.responses[200] = { 
-            schema: { $ref: "#/definitions/PaginatedMusics" },
-        } */
+  async save(req, res) {
+    // #swagger.tags = ['Music']
 
-        return res.json(paginatedMusics)
-    },
+    try {
+      let userId = req.userId;
 
-    async save(req, res) {
+      /* #swagger.parameters['music'] = { 
+        in: 'body',
+        schema: { $ref: "#/definitions/Music" }
+      } */
 
-        // #swagger.tags = ['Music']
+      let { title, artist, launchDate, duration, viewsNumber, feat } = req.body;
 
-        try {
+      await MusicService.save({
+        title,
+        artist,
+        launchDate,
+        duration,
+        viewsNumber,
+        feat,
+        userId,
+      });
 
-            let userId = req.userId
+      return res.status(201).send();
+    } catch (error) {
+      /* #swagger.responses[400] = { 
+        schema: { $ref: "#/definitions/MessageResponse" },
+      } */
 
-            /* #swagger.parameters['music'] = { 
-                in: 'body',
-                schema: { $ref: "#/definitions/Music" }
-            } */
+      res.status(400).json({ message: error.message });
+    }
+  },
 
-            let { title, artist, launchDate, duration, viewsNumber, feat } = req.body
+  async edit(req, res) {
+    // #swagger.tags = ['Music']
 
-            await MusicService.save({ title, artist, launchDate, duration, viewsNumber, feat, userId })
+    try {
+      let id = req.params.id;
 
-            return res.status(201).send()
+      /* #swagger.parameters['music'] = { 
+        in: 'body',
+        schema: { $ref: "#/definitions/Music" }
+      } */
 
-        } catch (error) {
+      let { title, artist, launchDate, duration, viewsNumber, feat } = req.body;
 
-            /* #swagger.responses[400] = { 
-               schema: { $ref: "#/definitions/MessageResponse" },
-            } */
+      await MusicService.edit({
+        id,
+        title,
+        artist,
+        launchDate,
+        duration,
+        viewsNumber,
+        feat,
+      });
 
-            res.status(400).json({ message: error.message })
-        }
-    },
+      return res.send();
+    } catch (error) {
+      /* #swagger.responses[400] = { 
+        schema: { $ref: "#/definitions/MessageResponse" },
+      } */
 
-    async edit(req, res) {
+      res.status(400).json({ message: error.message });
+    }
+  },
 
-        // #swagger.tags = ['Music']
+  async delete(req, res) {
+    // #swagger.tags = ['Music']
 
-        try {
+    try {
+      let id = req.params.id;
 
-            let id = req.params.id
+      await MusicService.delete(id);
 
-            /* #swagger.parameters['music'] = { 
-                in: 'body',
-                schema: { $ref: "#/definitions/Music" }
-            } */
+      return res.send();
+    } catch (error) {
+      /* #swagger.responses[400] = { 
+        schema: { $ref: "#/definitions/MessageResponse" },
+      } */
 
-            let { title, artist, launchDate, duration, viewsNumber, feat } = req.body
+      res.status(400).json({ message: error.message });
+    }
+  },
 
-            await MusicService.edit({ id, title, artist, launchDate, duration, viewsNumber, feat })
+  async getAllDeletedMusics(req, res) {
+    // #swagger.tags = ['Music']
 
-            return res.send()
+    let userId = req.userId;
 
-        } catch (error) {
+    let page = req.query.page;
 
-            /* #swagger.responses[400] = { 
-               schema: { $ref: "#/definitions/MessageResponse" },
-            } */
+    let paginatedMusics = await MusicService.getAllDeletedMusics(userId, page);
 
-            res.status(400).json({ message: error.message })
-        }
-    },
+    /* #swagger.responses[200] = { 
+      schema: { $ref: "#/definitions/PaginatedMusics" },
+    } */
 
-    async delete(req, res) {
+    return res.json(paginatedMusics);
+  },
 
-        // #swagger.tags = ['Music']
+  async getCountDeletedMusics(req, res) {
+    // #swagger.tags = ['Music']
 
-        try {
+    let userId = req.userId;
 
-            let id = req.params.id
+    let countDeletedMusics = await MusicService.getCountDeletedMusics(userId);
 
-            await MusicService.delete(id)
+    /* #swagger.responses[200] = { 
+      schema: { $ref: "#/definitions/MessageResponse" },
+    } */
 
-            return res.send()
+    return res.json({ message: countDeletedMusics });
+  },
 
-        } catch (error) {
+  async recoverDeletedMusics(req, res) {
+    // #swagger.tags = ['Music']
 
-            /* #swagger.responses[400] = { 
-               schema: { $ref: "#/definitions/MessageResponse" },
-            } */
+    try {
+      let musics = req.body;
 
-            res.status(400).json({ message: error.message })
-        }
-    },
+      await MusicService.recoverDeletedMusics(musics);
 
-    async getAllDeletedMusics(req, res) {
+      return res.send();
+    } catch (error) {
+      /* #swagger.responses[400] = { 
+        schema: { $ref: "#/definitions/MessageResponse" },
+      } */
 
-        // #swagger.tags = ['Music']
-
-        let userId = req.userId
-
-        let page = req.query.page
-
-        let paginatedMusics = await MusicService.getAllDeletedMusics(userId, page)
-
-        /* #swagger.responses[200] = { 
-            schema: { $ref: "#/definitions/PaginatedMusics" },
-        } */
-
-        return res.json(paginatedMusics)
-    },
-
-    async getCountDeletedMusics(req, res) {
-
-        // #swagger.tags = ['Music']
-
-        let userId = req.userId
-
-        let countDeletedMusics = await MusicService.getCountDeletedMusics(userId)
-
-        /* #swagger.responses[200] = { 
-            schema: { $ref: "#/definitions/MessageResponse" },
-        } */
-
-        return res.json({ message: countDeletedMusics })
-    },
-
-    async recoverDeletedMusics(req, res) {
-
-        // #swagger.tags = ['Music']
-
-        try {
-
-            let musics = req.body
-
-            await MusicService.recoverDeletedMusics(musics)
-
-            return res.send()
-
-        } catch (error) {
-
-            /* #swagger.responses[400] = { 
-               schema: { $ref: "#/definitions/MessageResponse" },
-            } */
-
-            res.status(400).json({ message: error.message })
-        }
-    },
-
-}
+      res.status(400).json({ message: error.message });
+    }
+  },
+};

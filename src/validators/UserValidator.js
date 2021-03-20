@@ -1,62 +1,53 @@
-
 module.exports = {
+  validLogin(user) {
+    validEmail(user.email);
 
-    validLogin(user) {
+    validEmailFormat(user.email);
 
-        validEmail(user.email)
+    validPassword(user.password);
 
-        validEmailFormat(user.email)
+    return true;
+  },
 
-        validPassword(user.password)
+  validCreate(user) {
+    validName(user.name);
 
-        return true
-    },
+    this.validLogin(user);
 
-    validCreate(user) {
-
-        validName(user.name)
-
-        this.validLogin(user)
-
-        return true
-    }
-
-}
+    return true;
+  },
+};
 
 function validName(name) {
+  if (!name) {
+    throw new Error("Name is required!");
+  }
 
-    if (!name) {
-        throw new Error('Name is required!')
-    }
-
-    return true
+  return true;
 }
 
 function validEmail(email) {
+  if (!email) {
+    throw new Error("E-Mail is required!");
+  }
 
-    if (!email) {
-        throw new Error('E-Mail is required!')
-    }
-
-    return true
+  return true;
 }
 
 function validEmailFormat(email) {
+  let emailRegex = new RegExp("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$");
 
-    let emailRegex = new RegExp('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')
+  if (!emailRegex.test(email)) {
+    throw new Error("Valid E-Mail format is required!");
+  }
 
-    if (!emailRegex.test(email)) {
-        throw new Error('Valid E-Mail format is required!')
-    }
-    
-    return true
+  return true;
 }
 
 function validPassword(password) {
+  if (!password) {
+    throw new Error("Password is required!");
+  }
 
-    if (!password) {
-        throw new Error('Password is required!')
-    }
-    
-    return true
+  return true;
 }
