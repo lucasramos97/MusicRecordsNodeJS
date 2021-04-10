@@ -1,4 +1,3 @@
-
 const express = require('express')
 const AuthRoutes = require('./AuthRoutes')
 const MusicRoutes = require('./MusicRoutes')

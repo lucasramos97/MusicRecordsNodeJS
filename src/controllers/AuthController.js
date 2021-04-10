@@ -1,4 +1,4 @@
-const AuthService = require("../services/AuthService");
+const AuthService = require('../services/AuthService')
 
 module.exports = {
   async login(req, res) {
@@ -10,21 +10,21 @@ module.exports = {
         schema: { $ref: "#/definitions/Login" }
       } */
 
-      let { email, password } = req.body;
+      let { email, password } = req.body
 
-      let messageResponse = await AuthService.login({ email, password });
+      let messageResponse = await AuthService.login({ email, password })
 
       /* #swagger.responses[200] = { 
         schema: { $ref: "#/definitions/MessageResponse" },
       } */
 
-      return res.json(messageResponse);
+      return res.json(messageResponse)
     } catch (error) {
       /* #swagger.responses[401] = { 
         schema: { $ref: "#/definitions/MessageResponse" },
       } */
 
-      return res.status(401).json({ message: error.message });
+      return res.status(401).json({ message: error.message })
     }
   },
 
@@ -37,17 +37,17 @@ module.exports = {
         schema: { $ref: "#/definitions/User" }
       } */
 
-      let { name, email, password } = req.body;
+      let { name, email, password } = req.body
 
-      await AuthService.create({ name, email, password });
+      await AuthService.create({ name, email, password })
 
-      return res.status(201).send();
+      return res.status(201).send()
     } catch (error) {
       /* #swagger.responses[400] = { 
         schema: { $ref: "#/definitions/MessageResponse" },
       } */
 
-      return res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message })
     }
-  },
-};
+  }
+}
